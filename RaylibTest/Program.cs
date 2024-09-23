@@ -63,15 +63,17 @@ class Program
             switch (mode)
             {
                 case GAME_STATE.MAIN:
-                    if(new TextButton().draw_text_button(start))
+                    if (new TextButton().draw_text_button(start))
                     {
-                        Console.WriteLine("test");
+                        Console.WriteLine("starting test");
                         mode = GAME_STATE.GAME;
                     }
+                    Raylib.DrawText("Click me!!!", p.window_height / 2 - 250, p.window_height / 2 - 195, 25, Color.Black);
                     break;
 
                 case GAME_STATE.GAME:
                     Raylib.DrawText("Hallo from Raylib C#", p.window_height / 2, p.window_height / 2, 50, Color.Black);
+                    Raylib.DrawText("use WASD OR Arrow Keys to move", p.window_height / 2, p.window_height/ 2 + 100, 35, Color.Black);
                     p.sprite.draw_player(p.posx, p.posy); // player draw code
                     break;
             }
