@@ -3,18 +3,9 @@ using RaylibTest;
 
 class Program
 {
-    private int window_width;
-    private int window_height;
-    private Sprite sprite;
     private int posx, posy = 0;
 
-    Program()
-    {
-        window_width = 1280;
-        window_height = 720;
-        sprite = new Sprite("Player", 100, 50);
-    }
-
+    // @Hack: Controls sprite movement for now
     private void update()
     {
         if (Raylib.IsKeyDown(KeyboardKey.W) || Raylib.IsKeyDown(KeyboardKey.Up))
@@ -42,43 +33,75 @@ class Program
 
     static void Main()
     {
-        Program p = new Program();
+        // @Note: Initialize Game Variables, etc...
+        Program p = new();
+        Screen s = new(1280, 720); // @Note: Get The Current GUI Window Dimensions
+        Text app_name = new("Raylib C# Demo", s.screen_width / 2 - 250, s.screen_height / 2 - 350, 75, Color.Black);
         GAME_STATE mode = GAME_STATE.MAIN;
-        Rectangle start_rect = new Rectangle(100, 100, 200, 100);
-        TextButton start = new TextButton("Start", start_rect, Color.Magenta, Color.Yellow, Color.RayWhite, 
-            100,100, 50);
 
+        // @Note: Hello World Button
+        Rectangle start_btn_rect = new(s.screen_width/2 - 100, s.screen_height/2 - 200, 200, 100);
+        TextButton start_btn = new("Hello World", start_btn_rect, Color.Gold, Color.Black, Color.Lime, (int)(start_btn_rect.X*1.03), (int)(start_btn_rect.Y*1.25), 30);
 
-        Raylib.InitWindow(p.window_width, p.window_height, "Test");
+        // @Note: Snake Button
+        Rectangle snake_game_btn_rect = new(s.screen_width / 2 - 100, s.screen_height / 2 - 50, 200, 100);
+        TextButton snake_game_btn = new("Snake", snake_game_btn_rect, Color.SkyBlue, Color.Black, Color.Purple, (int)(snake_game_btn_rect.X*1.03), (int)(snake_game_btn_rect.Y*1.11), 30);
+
+        // @Note: Invaders Button
+        Rectangle invaders_game_btn_rect = new(s.screen_width / 2 - 100, s.screen_height / 2 + 100, 200, 100);
+        TextButton invaders_game_btn = new("Invaders", invaders_game_btn_rect, Color.DarkPurple, Color.Black, Color.White, (int)(invaders_game_btn_rect.X*1.03), (int)(invaders_game_btn_rect.Y*1.11), 30);
+
+        // @Note: Initialize window
+        Raylib.InitWindow(s.screen_width, s.screen_height, "Raylib C# Demo");
         Raylib.SetTargetFPS(60);
+        Console.WriteLine($"Window Dimensions(width:{s.screen_width}, height:{s.screen_height})");
 
         while (!Raylib.WindowShouldClose())
         {
             p.update();
 
-            // Window Draw Code
+            // @Note: Window Draw Code
             Raylib.BeginDrawing();
-            Raylib.ClearBackground(Color.RayWhite); // Refresh the Window with a Static Color
+            Raylib.ClearBackground(Color.RayWhite); // @Note: Refresh the Window with a Static Color
 
             switch (mode)
             {
                 case GAME_STATE.MAIN:
-                    if (new TextButton().draw_text_button(start))
+                    app_name.draw_text();
+                    if (start_btn.draw_text_button())
                     {
-                        Console.WriteLine("starting test");
-                        mode = GAME_STATE.GAME;
+                        Console.WriteLine("Starting HELLO_WORLD MODE");
+                        mode = GAME_STATE.HELLO_WORLD;
                     }
-                    Raylib.DrawText("Click me!!!", p.window_height / 2 - 250, p.window_height / 2 - 195, 25, Color.Black);
+
+                    if (snake_game_btn.draw_text_button())
+                    {
+                        Console.WriteLine("Starting SNAKE GAME");
+                        mode = GAME_STATE.SNAKE;
+                    }
+
+                    if (invaders_game_btn.draw_text_button())
+                    {
+                        Console.WriteLine("Starting INVADERS GAME");
+                        mode = GAME_STATE.INVADERS;
+                    }
                     break;
 
-                case GAME_STATE.GAME:
-                    Raylib.DrawText("Hallo from Raylib C#", p.window_height / 2, p.window_height / 2, 50, Color.Black);
-                    Raylib.DrawText("use WASD OR Arrow Keys to move", p.window_height / 2, p.window_height/ 2 + 100, 35, Color.Black);
-                    p.sprite.draw_player(p.posx, p.posy); // player draw code
+                case GAME_STATE.HELLO_WORLD:
+                    Sprite sprite = new("Player", 100, 50);
+                    Raylib.DrawText("Hallo from Raylib C#", s.screen_height / 2, s.screen_height / 2, 50, Color.Black);
+                    Raylib.DrawText("use WASD OR Arrow Keys to move", s.screen_height / 2, s.screen_height/ 2 + 100, 35, Color.Black);
+                    sprite.draw_sprite(p.posx, p.posy); //@Note: player draw code
+                    break;
+
+                case GAME_STATE.SNAKE:
+                    break;
+
+                case GAME_STATE.INVADERS:
                     break;
             }
 
-            // Close the Window Once you done
+            //@Note: Close the Window Once you done
             Raylib.EndDrawing();
         }
         Raylib.CloseWindow();

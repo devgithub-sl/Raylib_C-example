@@ -2,6 +2,24 @@
 
 namespace RaylibTest;
 
+public readonly struct Screen
+{
+    public readonly int screen_width;
+    public readonly int screen_height;
+
+    public Screen()
+    {
+        screen_width = Raylib.GetScreenWidth();
+        screen_height = Raylib.GetScreenHeight();
+    }
+
+    public Screen(int sw, int sh)
+    {
+        screen_width = sw;
+        screen_height = sh;
+    }
+}
+
 public readonly struct TextButton
 {
     readonly string text;
@@ -26,17 +44,39 @@ public readonly struct TextButton
         this.is_clicked = is_clicked;
     }
 
-    public bool draw_text_button(TextButton b)
+    public bool draw_text_button()
     {
-        Raylib.DrawRectangleRec(b.rect, b.back_color);
-        Raylib.DrawRectangleLines((int)b.rect.X, (int)b.rect.Y, (int)b.rect.Width, (int)b.rect.Height, b.outline_color);
+        Raylib.DrawRectangleRec(rect, back_color);
+        Raylib.DrawRectangleLines((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height, outline_color);
 
-        Raylib.DrawText(b.text, b.pos[0], b.pos[1], b.font_size, b.text_color);
+        Raylib.DrawText(text, pos[0], pos[1], font_size, text_color);
 
-        if (Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), b.rect) && Raylib.IsMouseButtonPressed(MouseButton.Left) == true)
+        if (Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), rect) && Raylib.IsMouseButtonPressed(MouseButton.Left) == true)
         {
-            return !b.is_clicked;
+            return !is_clicked;
         }
-        return b.is_clicked;
+        return is_clicked;
+    }
+}
+
+public readonly struct Text
+{
+    readonly string value;
+    readonly int[] pos = new int[2];
+    readonly int font_size;
+    readonly Color color;
+
+    public Text(string v, int posx, int posy, int fs, Color c)
+    {
+        value = v;
+        pos[0] = posx;
+        pos[1] = posy;
+        font_size = fs;
+        color = c;
+    }
+
+    public void draw_text()
+    {
+        Raylib.DrawText(value, pos[0], pos[1], font_size, color);
     }
 }

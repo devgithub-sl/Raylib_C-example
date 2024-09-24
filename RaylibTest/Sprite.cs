@@ -7,7 +7,7 @@ public class Sprite
     protected string name;
     protected float health;
     protected int width;
-    protected int x, y;
+    public int x, y;
 
     public Sprite(string name, float health, int width)
     {
@@ -16,7 +16,7 @@ public class Sprite
         this.width = width;
     }
 
-    public void draw_player(int pos_x, int pos_y)
+    public void draw_sprite(int pos_x, int pos_y)
     {
         Raylib.DrawRectangle(pos_x, pos_y, width, width, Color.Red);
     }
